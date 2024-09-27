@@ -1,0 +1,97 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Swagger API for the Kiwi Collective project.",
+        "title": "Kiwi Collective API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "basePath": "/",
+    "paths": {
+        "/tickets": {
+            "post": {
+                "description": "Crée un billet de tombola pour un étudiant.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Tickets"
+                ],
+                "summary": "Créer un nouveau ticket",
+                "parameters": [
+                    {
+                        "description": "Ticket à créer",
+                        "name": "ticket",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Ticket"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.Ticket"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Bad request",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "models.Ticket": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "deletedAt": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "kermesse_id": {
+                    "description": "Référence vers la Kermesse",
+                    "type": "integer"
+                },
+                "purchased_at": {
+                    "description": "Date d'achat des tickets",
+                    "type": "string"
+                },
+                "student_id": {
+                    "description": "Référence vers un Student",
+                    "type": "integer"
+                },
+                "ticket_number": {
+                    "description": "Numéro unique du ticket",
+                    "type": "string"
+                },
+                "tombola_id": {
+                    "description": "Référence vers la Tombola",
+                    "type": "integer"
+                },
+                "updatedAt": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

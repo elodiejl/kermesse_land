@@ -1,0 +1,6 @@
+.env
+.env.local
+.idea/
+hackaton-gcs.json
+tmp/
+certs/
