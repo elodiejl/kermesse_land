@@ -9,7 +9,7 @@ type User struct {
 	FirstName   string `json:"first_name" binding:"required" example:"John"`
 	Email       string `gorm:"unique" json:"email" binding:"required" example:"john.doe@exmple.com"`
 	Password    string `gorm:"not null" json:"password" binding:"required" example:"password"`
-	Roles       uint8  `json:"roles" example:"0"` // 0 = organizer, 2 = admin, 4 = student , 6 = parents, 8 = stand_leader
+	Roles       uint8  `json:"roles" example:"0"` // 1 = organizer, 2 = admin, 4 = student , 8 = parents, 16 = stand_leader
 	CreatedByID *uint  `json:"created_by_id"`
 	CreatedBy   *User  `gorm:"foreignKey:CreatedByID"`
 }

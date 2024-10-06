@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "377950971319",
+    "project_id": "kermesse-land",
+    "storage_bucket": "kermesse-land.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:377950971319:android:52ff1b7b19f756639bb432",
+        "android_client_info": {
+          "package_name": "com.example.front"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBg_cr_RO4TDBBCXUBa3f71gs7xZAtD_v4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -3,7 +3,6 @@ package seeders
 import (
 	"back/models"
 	"gorm.io/gorm"
-	"time"
 )
 
 func SeedKermesses(db *gorm.DB) error {
@@ -11,12 +10,12 @@ func SeedKermesses(db *gorm.DB) error {
 		{
 			Name:     "Kermesse de l'École A",
 			Location: "École A, Paris",
-			Date:     time.Now().AddDate(0, 1, 0).Format("2024-09-02"),
+			Date:     "2024-10-12",
 		},
 		{
 			Name:     "Kermesse de l'École B",
 			Location: "École B, Lyon",
-			Date:     time.Now().AddDate(0, 2, 0).Format("2024-09-10"),
+			Date:     "2024-10-16",
 		},
 	}
 

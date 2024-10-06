@@ -11,14 +11,25 @@ import (
 )
 
 type UserController struct {
-	repo *repositories.UserRepository
+	repo       repositories.UserRepository
+	parentRepo repositories.ParentRepository
 }
 
-func NewUserController(repo *repositories.UserRepository) *UserController {
+func NewUserController(repo repositories.UserRepository) *UserController {
 	return &UserController{repo: repo}
 }
 
-// CreateUser Créer un utilisateur
+// CreateUser godoc
+// @Summary Create a new user
+// @Description Create a new user with the provided information
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param user body models.User true "User object to create"
+// @Success 201 {object} models.User "User created"
+// @Failure 400 {object} string "Invalid input"
+// @Failure 500 {object} string "Internal server error"
+// @Router /user [post]
 func (ctrl *UserController) CreateUser(c *gin.Context) {
 	var user models.User
 	if err := c.ShouldBindJSON(&user); err != nil {
@@ -34,31 +45,14 @@ func (ctrl *UserController) CreateUser(c *gin.Context) {
 	c.JSON(http.StatusCreated, user)
 }
 
-// GetUserByID Récupérer un utilisateur par ID
-/*func (ctrl *UserController) GetUserByID(c *gin.Context) {
-	id, err := strconv.Atoi(c.Param("id"))
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
-		return
-	}
-
-	user, err := ctrl.repo.GetUserByID(id, )
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
-		return
-	}
-
-	c.JSON(http.StatusOK, user)
-}*/
-
 // GetMe godoc
 // @Summary Get the current user
-// @Description Get the current user
+// @Description Retrieve the currently authenticated user's details using their token
 // @Tags users
-// @Accept  json
-// @Produce  json
+// @Accept json
+// @Produce json
 // @Security ApiKeyAuth
-// @Success 200 {object} models.User
+// @Success 200 {object} models.User "The currently authenticated user"
 // @Failure 401 {object} string "Unauthorized: Invalid token"
 // @Failure 404 {object} string "User not found"
 // @Router /user/me [get]
@@ -70,7 +64,7 @@ func (ctrl *UserController) GetMe(c *gin.Context) {
 	}
 
 	var user models.User
-	if err, _ := ctrl.repo.FindByID(userID); err != nil {
+	if err := ctrl.repo.GetUserByID(userID, &user); err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
 		return
 	}
@@ -82,7 +76,7 @@ func (ctrl *UserController) GetMe(c *gin.Context) {
 // @Summary Update current user's profile
 // @Description Update the profile information of the currently authenticated user, including password.
 // @Tags users
-// @Accept json
+// @Accept multipart/form-data
 // @Produce json
 // @Security ApiKeyAuth
 // @Param first_name formData string false "First name of the user"
@@ -93,10 +87,10 @@ func (ctrl *UserController) GetMe(c *gin.Context) {
 // @Param new_password formData string false "New password for the user"
 // @Param skills formData string false "Array of skill IDs"
 // @Success 200 {object} models.PublicUser "Successfully updated user profile"
-// @Failure 400 {string} string "Bad request if the provided data is incorrect"
-// @Failure 401 {string} string "Unauthorized if the user's old password is incorrect or token is invalid"
-// @Failure 404 {string} string "Not Found if the user does not exist"
-// @Failure 500 {string} string "Internal Server Error for any server errors"
+// @Failure 400 {object} string "Bad request if the provided data is incorrect"
+// @Failure 401 {object} string "Unauthorized if the user's old password is incorrect or token is invalid"
+// @Failure 404 {object} string "Not Found if the user does not exist"
+// @Failure 500 {object} string "Internal Server Error for any server errors"
 // @Router /user/me [put]
 func (ctrl *UserController) UpdateMe(c *gin.Context) {
 	userID, err := ctrl.getUserIDFromToken(c)
@@ -106,7 +100,7 @@ func (ctrl *UserController) UpdateMe(c *gin.Context) {
 	}
 
 	var user models.User
-	if err, _ := ctrl.repo.FindByID(userID); err != nil {
+	if err := ctrl.repo.GetUserByID(userID, &user); err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
 		return
 	}
@@ -160,19 +154,23 @@ func (ctrl *UserController) UpdateMe(c *gin.Context) {
 	c.JSON(http.StatusOK, user)
 }
 
-// Supprimer un utilisateur par ID
+// DeleteUser godoc
+// @Summary Delete the currently authenticated user
+// @Description Delete the user account of the currently authenticated user.
+// @Tags users
+// @Security ApiKeyAuth
+// @Success 200 {string} string "User deleted successfully"
+// @Failure 401 {object} string "Unauthorized: Invalid token"
+// @Failure 404 {object} string "User not found"
+// @Router /user [delete]
 func (ctrl *UserController) DeleteUser(c *gin.Context) {
 	id, err := ctrl.getUserIDFromToken(c)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return
 	}
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID"})
-		return
-	}
 
-	if err := ctrl.repo.Delete(id); err != nil {
+	if err := ctrl.repo.DeleteUser(id); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not delete user"})
 		return
 	}
@@ -180,6 +178,7 @@ func (ctrl *UserController) DeleteUser(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "User deleted"})
 }
 
+// Helper method to get user ID from token
 func (ctrl *UserController) getUserIDFromToken(c *gin.Context) (uint, error) {
 	token := c.GetHeader("Authorization")
 	if token == "" {

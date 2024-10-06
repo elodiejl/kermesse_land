@@ -1,5 +1,101 @@
-basePath: /
 definitions:
+  controllers.PaymentIntentRequest:
+    properties:
+      amount:
+        type: integer
+      currency:
+        type: string
+      parent_id:
+        type: string
+    required:
+    - amount
+    - currency
+    - parent_id
+    type: object
+  models.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  models.Kermesse:
+    properties:
+      createdAt:
+        type: string
+      date:
+        type: string
+      deletedAt:
+        type: string
+      id:
+        type: integer
+      location:
+        type: string
+      name:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  models.Parent:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        type: string
+      id:
+        type: integer
+      tokens_amount_available:
+        description: Solde de jetons disponibles
+        type: integer
+      updatedAt:
+        type: string
+      user_id:
+        description: Référence vers la table User
+        type: integer
+    type: object
+  models.PublicUser:
+    properties:
+      email:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: integer
+      last_name:
+        type: string
+    type: object
+  models.Stand:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        type: string
+      id:
+        type: integer
+      kermesse_id:
+        description: Référence vers la table Kermesse
+        type: integer
+      name:
+        type: string
+      participation_cost:
+        description: Coût en jetons pour participer
+        type: integer
+      stand_type:
+        description: 'ENUM: ''nourriture'', ''boisson'', ''activité'''
+        type: string
+      stock:
+        description: Stock pour les stands de nourriture ou boisson
+        type: integer
+      teneur_id:
+        description: Référence vers la table User (teneur de stand)
+        type: integer
+      updatedAt:
+        type: string
+    required:
+    - kermesse_id
+    - name
+    - participation_cost
+    - stand_type
+    - stock
+    type: object
   models.Ticket:
     properties:
       createdAt:
@@ -25,18 +121,559 @@ definitions:
         type: integer
       updatedAt:
         type: string
+    required:
+    - kermesse_id
+    - student_id
+    - ticket_number
+    - tombola_id
+    type: object
+  models.Tombola:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        type: string
+      drawn_at:
+        description: Date du tirage
+        type: string
+      id:
+        type: integer
+      kermesse_id:
+        description: Référence vers la Kermesse
+        type: integer
+      prize_name:
+        description: Nom du lot
+        type: string
+      ticket_id:
+        description: Référence vers Ticket gagnant
+        type: integer
+      updatedAt:
+        type: string
+      winner_id:
+        description: Référence vers le gagnant (élève ou parent) User
+        type: integer
+    required:
+    - drawn_at
+    - kermesse_id
+    - prize_name
+    type: object
+  models.Transaction:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        type: string
+      id:
+        type: integer
+      parent_id:
+        description: Référence vers un parent
+        type: integer
+      price:
+        description: Montant de la transaction (en monnaie réelle)
+        type: integer
+      tokens_amount:
+        description: Nombre de jetons achetés
+        type: integer
+      transaction_date:
+        type: string
+      updatedAt:
+        type: string
+    required:
+    - parent_id
+    - price
+    - tokens_amount
+    type: object
+  models.User:
+    properties:
+      created_by_id:
+        type: integer
+      createdAt:
+        type: string
+      createdBy:
+        $ref: '#/definitions/models.User'
+      deletedAt:
+        type: string
+      email:
+        example: john.doe@exmple.com
+        type: string
+      first_name:
+        example: John
+        type: string
+      id:
+        type: integer
+      last_name:
+        example: Doe
+        type: string
+      password:
+        example: password
+        type: string
+      roles:
+        description: 1 = organizer, 2 = admin, 4 = student , 8 = parents, 16 = stand_leader
+        example: 0
+        type: integer
+      updatedAt:
+        type: string
+      username:
+        example: jdoe
+        type: string
+    required:
+    - email
+    - first_name
+    - last_name
+    - password
+    - username
+    type: object
+  models.UserLogin:
+    properties:
+      email:
+        example: john.doe@exmple.com
+        type: string
+      password:
+        example: password
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  models.UserRegisterResponse:
+    properties:
+      email:
+        type: string
+      username:
+        type: string
     type: object
 info:
-  contact: {}
-  description: Swagger API for the Kiwi Collective project.
-  title: Kiwi Collective API
-  version: "1.0"
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
 paths:
+  /api/create-payment-intent:
+    post:
+      consumes:
+      - application/json
+      description: Crée un PaymentIntent pour le paiement de jetons
+      parameters:
+      - description: Données de la requête
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.PaymentIntentRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Client secret
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Créer un PaymentIntent
+      tags:
+      - payments
+  /kermesse/{kermesse_id}/stands:
+    get:
+      description: Récupère tous les stands associés à une kermesse spécifique
+      parameters:
+      - description: Kermesse ID
+        in: path
+        name: kermesse_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Liste des stands
+          schema:
+            items:
+              $ref: '#/definitions/models.Stand'
+            type: array
+        "400":
+          description: Invalid kermesse ID
+          schema:
+            type: string
+        "500":
+          description: Could not retrieve stands
+          schema:
+            type: string
+      summary: Récupérer tous les stands pour une kermesse
+      tags:
+      - stands
+  /kermesse/{kermesse_id}/tombolas:
+    get:
+      description: Retrieve all tombolas for a specific kermesse
+      parameters:
+      - description: Kermesse ID
+        in: path
+        name: kermesse_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Tombola'
+            type: array
+        "400":
+          description: Invalid kermesse ID
+          schema:
+            type: string
+        "401":
+          description: 'Unauthorized: No authorization token provided'
+          schema:
+            type: string
+        "500":
+          description: Could not retrieve tombolas
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Get all tombolas for a kermesse
+      tags:
+      - tombola
+  /kermesses:
+    get:
+      description: Récupère toutes les kermesses.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Kermesse'
+            type: array
+        "500":
+          description: Could not retrieve kermesses
+          schema:
+            type: string
+      summary: Récupérer toutes les kermesses
+      tags:
+      - Kermesses
+    post:
+      consumes:
+      - application/json
+      description: Crée une kermesse.
+      parameters:
+      - description: Kermesse à créer
+        in: body
+        name: kermesse
+        required: true
+        schema:
+          $ref: '#/definitions/models.Kermesse'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Kermesse'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Could not create kermesse
+          schema:
+            type: string
+      summary: Créer une nouvelle kermesse
+      tags:
+      - Kermesses
+  /kermesses/{id}:
+    delete:
+      description: Supprime une kermesse par son ID.
+      parameters:
+      - description: Kermesse ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Kermesse deleted
+          schema:
+            type: string
+        "400":
+          description: Invalid kermesse ID
+          schema:
+            type: string
+        "500":
+          description: Could not delete kermesse
+          schema:
+            type: string
+      summary: Supprimer une kermesse par ID
+      tags:
+      - Kermesses
+    get:
+      description: Récupère une kermesse par son ID.
+      parameters:
+      - description: Kermesse ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Kermesse'
+        "400":
+          description: Invalid kermesse ID
+          schema:
+            type: string
+        "404":
+          description: Kermesse not found
+          schema:
+            type: string
+      summary: Récupérer une kermesse par ID
+      tags:
+      - Kermesses
+  /parents:
+    post:
+      consumes:
+      - application/json
+      description: Créer une nouvelle entrée parent
+      parameters:
+      - description: Parent data
+        in: body
+        name: parent
+        required: true
+        schema:
+          $ref: '#/definitions/models.Parent'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Parent created
+          schema:
+            $ref: '#/definitions/models.Parent'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Créer un parent
+      tags:
+      - parents
+  /parents/{id}:
+    delete:
+      description: Supprimer un parent par son ID
+      parameters:
+      - description: Parent ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Parent deleted
+          schema:
+            type: string
+        "400":
+          description: Invalid ID format
+          schema:
+            type: string
+        "404":
+          description: Parent not found
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Supprimer un parent
+      tags:
+      - parents
+    get:
+      description: Récupérer un parent par son ID
+      parameters:
+      - description: Parent ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Parent found
+          schema:
+            $ref: '#/definitions/models.Parent'
+        "400":
+          description: Invalid ID format
+          schema:
+            type: string
+        "404":
+          description: Parent not found
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Trouver un parent par ID
+      tags:
+      - parents
+    put:
+      consumes:
+      - application/json
+      description: Mettre à jour les informations d'un parent
+      parameters:
+      - description: Parent ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Parent data
+        in: body
+        name: parent
+        required: true
+        schema:
+          $ref: '#/definitions/models.Parent'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Parent updated
+          schema:
+            $ref: '#/definitions/models.Parent'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "404":
+          description: Parent not found
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Mettre à jour un parent
+      tags:
+      - parents
+  /stands:
+    post:
+      consumes:
+      - application/json
+      description: Crée un stand pour une kermesse
+      parameters:
+      - description: Stand à créer
+        in: body
+        name: stand
+        required: true
+        schema:
+          $ref: '#/definitions/models.Stand'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Stand créé
+          schema:
+            $ref: '#/definitions/models.Stand'
+        "400":
+          description: Invalid input
+          schema:
+            type: string
+        "500":
+          description: Could not create stand
+          schema:
+            type: string
+      summary: Créer un nouveau stand
+      tags:
+      - stands
+  /stands/{id}:
+    delete:
+      description: Supprime un stand spécifique par son ID
+      parameters:
+      - description: Stand ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: Stand supprimé
+          schema:
+            type: string
+        "400":
+          description: Invalid stand ID
+          schema:
+            type: string
+        "404":
+          description: Stand not found
+          schema:
+            type: string
+        "500":
+          description: Could not delete stand
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Supprimer un stand par ID
+      tags:
+      - stands
+    get:
+      description: Récupère un stand spécifique par son ID
+      parameters:
+      - description: Stand ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Stand trouvé
+          schema:
+            $ref: '#/definitions/models.Stand'
+        "400":
+          description: Invalid stand ID
+          schema:
+            type: string
+        "404":
+          description: Stand not found
+          schema:
+            type: string
+      summary: Récupérer un stand par ID
+      tags:
+      - stands
   /tickets:
     post:
       consumes:
       - application/json
-      description: Crée un billet de tombola pour un étudiant.
+      description: Crée un billet de tombola pour un élève ou un parent.
       parameters:
       - description: Ticket à créer
         in: body
@@ -48,18 +685,581 @@ paths:
       - application/json
       responses:
         "201":
-          description: Created
+          description: Ticket créé avec succès
           schema:
             $ref: '#/definitions/models.Ticket'
         "400":
-          description: Invalid request
+          description: Requête invalide
           schema:
             type: string
         "500":
-          description: Bad request
+          description: Erreur interne du serveur
           schema:
             type: string
       summary: Créer un nouveau ticket
       tags:
       - Tickets
+  /tickets/{id}:
+    delete:
+      description: Supprime un ticket spécifique par son ID.
+      parameters:
+      - description: Ticket ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: Ticket supprimé avec succès
+          schema:
+            type: string
+        "400":
+          description: ID de ticket invalide
+          schema:
+            type: string
+        "404":
+          description: Ticket non trouvé
+          schema:
+            type: string
+        "500":
+          description: Erreur lors de la suppression du ticket
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Supprimer un ticket par ID
+      tags:
+      - Tickets
+    get:
+      description: Récupère un ticket spécifique par son ID.
+      parameters:
+      - description: Ticket ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Ticket trouvé
+          schema:
+            $ref: '#/definitions/models.Ticket'
+        "400":
+          description: ID de ticket invalide
+          schema:
+            type: string
+        "404":
+          description: Ticket non trouvé
+          schema:
+            type: string
+      summary: Récupérer un ticket par ID
+      tags:
+      - Tickets
+  /tombola:
+    post:
+      consumes:
+      - application/json
+      description: Create a new tombola
+      parameters:
+      - description: Tombola object to create
+        in: body
+        name: tombola
+        required: true
+        schema:
+          $ref: '#/definitions/models.Tombola'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Tombola created
+          schema:
+            $ref: '#/definitions/models.Tombola'
+        "400":
+          description: Invalid input
+          schema:
+            type: string
+        "401":
+          description: 'Unauthorized: No authorization token provided'
+          schema:
+            type: string
+        "500":
+          description: Could not create tombola
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Create a new tombola
+      tags:
+      - tombola
+  /tombola/{id}:
+    delete:
+      description: Delete a specific tombola by its ID
+      parameters:
+      - description: Tombola ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: Tombola deleted successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid tombola ID
+          schema:
+            type: string
+        "401":
+          description: 'Unauthorized: No authorization token provided'
+          schema:
+            type: string
+        "404":
+          description: Tombola not found
+          schema:
+            type: string
+        "500":
+          description: Could not delete tombola
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Delete a tombola by ID
+      tags:
+      - tombola
+    get:
+      description: Retrieve a tombola by its ID
+      parameters:
+      - description: Tombola ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Tombola'
+        "400":
+          description: Invalid tombola ID
+          schema:
+            type: string
+        "401":
+          description: 'Unauthorized: No authorization token provided'
+          schema:
+            type: string
+        "404":
+          description: Tombola not found
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Get tombola by ID
+      tags:
+      - tombola
+  /tombola/{tombola_id}/tickets:
+    get:
+      description: Récupère tous les tickets associés à une tombola spécifique.
+      parameters:
+      - description: Tombola ID
+        in: path
+        name: tombola_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Liste des tickets
+          schema:
+            items:
+              $ref: '#/definitions/models.Ticket'
+            type: array
+        "400":
+          description: ID de tombola invalide
+          schema:
+            type: string
+        "500":
+          description: Erreur lors de la récupération des tickets
+          schema:
+            type: string
+      summary: Récupérer tous les tickets pour une tombola
+      tags:
+      - Tickets
+  /transactions:
+    get:
+      consumes:
+      - application/json
+      description: Récupère toutes les transactions associées à un parent
+      parameters:
+      - description: Parent ID
+        in: query
+        name: parent_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Transaction'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Obtenir toutes les transactions d'un parent
+      tags:
+      - transactions
+    post:
+      consumes:
+      - application/json
+      description: Crée une nouvelle transaction pour un parent
+      parameters:
+      - description: Données de la requête
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.Transaction'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Transaction'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Créer une transaction
+      tags:
+      - transactions
+  /transactions/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Supprime une transaction par son ID
+      parameters:
+      - description: Transaction ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Supprimer une transaction
+      tags:
+      - transactions
+    get:
+      consumes:
+      - application/json
+      description: Récupère une transaction par son ID
+      parameters:
+      - description: Transaction ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Transaction'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Obtenir une transaction
+      tags:
+      - transactions
+    put:
+      consumes:
+      - application/json
+      description: Met à jour les informations d'une transaction
+      parameters:
+      - description: Transaction ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Données de la requête
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/models.Transaction'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Transaction'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Mettre à jour une transaction
+      tags:
+      - transactions
+  /user:
+    delete:
+      description: Delete the user account of the currently authenticated user.
+      responses:
+        "200":
+          description: User deleted successfully
+          schema:
+            type: string
+        "401":
+          description: 'Unauthorized: Invalid token'
+          schema:
+            type: string
+        "404":
+          description: User not found
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Delete the currently authenticated user
+      tags:
+      - users
+    post:
+      consumes:
+      - application/json
+      description: Create a new user with the provided information
+      parameters:
+      - description: User object to create
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: User created
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Invalid input
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Create a new user
+      tags:
+      - users
+  /user/login:
+    post:
+      consumes:
+      - application/json
+      description: Logs in a user
+      parameters:
+      - description: User credentials
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/models.UserLogin'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Token
+          schema:
+            type: string
+        "400":
+          description: Invalid request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "401":
+          description: Invalid request
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/models.ErrorResponse'
+      summary: Login
+      tags:
+      - auth
+  /user/me:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve the currently authenticated user's details using their
+        token
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: The currently authenticated user
+          schema:
+            $ref: '#/definitions/models.User'
+        "401":
+          description: 'Unauthorized: Invalid token'
+          schema:
+            type: string
+        "404":
+          description: User not found
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Get the current user
+      tags:
+      - users
+    put:
+      consumes:
+      - multipart/form-data
+      description: Update the profile information of the currently authenticated user,
+        including password.
+      parameters:
+      - description: First name of the user
+        in: formData
+        name: first_name
+        type: string
+      - description: Last name of the user
+        in: formData
+        name: last_name
+        type: string
+      - description: Email address of the user
+        in: formData
+        name: email
+        type: string
+      - description: Profile picture file
+        in: formData
+        name: profile_picture
+        type: file
+      - description: Current password for verification
+        in: formData
+        name: old_password
+        required: true
+        type: string
+      - description: New password for the user
+        in: formData
+        name: new_password
+        type: string
+      - description: Array of skill IDs
+        in: formData
+        name: skills
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully updated user profile
+          schema:
+            $ref: '#/definitions/models.PublicUser'
+        "400":
+          description: Bad request if the provided data is incorrect
+          schema:
+            type: string
+        "401":
+          description: Unauthorized if the user's old password is incorrect or token
+            is invalid
+          schema:
+            type: string
+        "404":
+          description: Not Found if the user does not exist
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error for any server errors
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Update current user's profile
+      tags:
+      - users
+  /user/register:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Registers a new user
+      parameters:
+      - description: Username
+        in: formData
+        name: username
+        required: true
+        type: string
+      - description: Last Name
+        in: formData
+        name: last_name
+        required: true
+        type: string
+      - description: First Name
+        in: formData
+        name: first_name
+        required: true
+        type: string
+      - description: Email
+        in: formData
+        name: email
+        required: true
+        type: string
+      - description: Password
+        in: formData
+        name: password
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: User registered
+          schema:
+            $ref: '#/definitions/models.UserRegisterResponse'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Register
+      tags:
+      - auth
+securityDefinitions:
+  ApiKeyAuth:
+    description: Bearer token
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

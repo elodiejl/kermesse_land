@@ -11,23 +11,24 @@ import (
 )
 
 type TicketController struct {
-	repo *repositories.TicketRepository
+	repo repositories.TicketRepository
 }
 
 // NewTicketController Créer un nouveau contrôleur
-func NewTicketController(repo *repositories.TicketRepository) *TicketController {
+func NewTicketController(repo repositories.TicketRepository) *TicketController {
 	return &TicketController{repo: repo}
 }
 
+// CreateTicket godoc
 // @Summary Créer un nouveau ticket
 // @Description Crée un billet de tombola pour un élève ou un parent.
 // @Tags Tickets
-// @Accept  json
-// @Produce  json
+// @Accept json
+// @Produce json
 // @Param ticket body models.Ticket true "Ticket à créer"
-// @Success 201 {object} models.Ticket
-// @Failure 400 {object} string "Invalid request"
-// @Failure 500 {object} string "Bad request"
+// @Success 201 {object} models.Ticket "Ticket créé avec succès"
+// @Failure 400 {object} string "Requête invalide"
+// @Failure 500 {object} string "Erreur interne du serveur"
 // @Router /tickets [post]
 func (ctrl *TicketController) CreateTicket(c *gin.Context) {
 	var ticket models.Ticket
@@ -49,7 +50,16 @@ func (ctrl *TicketController) CreateTicket(c *gin.Context) {
 	c.JSON(http.StatusCreated, ticket)
 }
 
-// Récupérer un ticket par ID
+// GetTicketByID godoc
+// @Summary Récupérer un ticket par ID
+// @Description Récupère un ticket spécifique par son ID.
+// @Tags Tickets
+// @Produce json
+// @Param id path int true "Ticket ID"
+// @Success 200 {object} models.Ticket "Ticket trouvé"
+// @Failure 400 {object} string "ID de ticket invalide"
+// @Failure 404 {object} string "Ticket non trouvé"
+// @Router /tickets/{id} [get]
 func (ctrl *TicketController) GetTicketByID(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -57,7 +67,7 @@ func (ctrl *TicketController) GetTicketByID(c *gin.Context) {
 		return
 	}
 
-	ticket, err := ctrl.repo.FindByID(id)
+	ticket, err := ctrl.repo.FindByID(uint(id))
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Ticket not found"})
 		return
@@ -66,7 +76,16 @@ func (ctrl *TicketController) GetTicketByID(c *gin.Context) {
 	c.JSON(http.StatusOK, ticket)
 }
 
-// GetTicketsByTombola Récupérer tous les tickets pour une tombola
+// GetTicketsByTombola godoc
+// @Summary Récupérer tous les tickets pour une tombola
+// @Description Récupère tous les tickets associés à une tombola spécifique.
+// @Tags Tickets
+// @Produce json
+// @Param tombola_id path int true "Tombola ID"
+// @Success 200 {array} models.Ticket "Liste des tickets"
+// @Failure 400 {object} string "ID de tombola invalide"
+// @Failure 500 {object} string "Erreur lors de la récupération des tickets"
+// @Router /tombola/{tombola_id}/tickets [get]
 func (ctrl *TicketController) GetTicketsByTombola(c *gin.Context) {
 	tombolaID, err := strconv.Atoi(c.Param("tombola_id"))
 	if err != nil {
@@ -83,7 +102,17 @@ func (ctrl *TicketController) GetTicketsByTombola(c *gin.Context) {
 	c.JSON(http.StatusOK, tickets)
 }
 
-// DeleteTicket Supprimer un ticket par ID
+// DeleteTicket godoc
+// @Summary Supprimer un ticket par ID
+// @Description Supprime un ticket spécifique par son ID.
+// @Tags Tickets
+// @Security ApiKeyAuth
+// @Param id path int true "Ticket ID"
+// @Success 200 {object} string "Ticket supprimé avec succès"
+// @Failure 400 {object} string "ID de ticket invalide"
+// @Failure 404 {object} string "Ticket non trouvé"
+// @Failure 500 {object} string "Erreur lors de la suppression du ticket"
+// @Router /tickets/{id} [delete]
 func (ctrl *TicketController) DeleteTicket(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -91,7 +120,7 @@ func (ctrl *TicketController) DeleteTicket(c *gin.Context) {
 		return
 	}
 
-	if err := ctrl.repo.Delete(id); err != nil {
+	if err := ctrl.repo.Delete(uint(id)); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not delete ticket"})
 		return
 	}

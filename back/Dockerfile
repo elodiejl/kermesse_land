@@ -8,7 +8,9 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
 # Final stage
 FROM alpine:latest  
 RUN apk --no-cache add ca-certificates
+#WORKDIR /app
 WORKDIR /root/
 COPY --from=builder /app/main .
+#COPY --from=base /app ./
 COPY .env ./
 CMD ["./main"]

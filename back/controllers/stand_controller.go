@@ -10,14 +10,24 @@ import (
 )
 
 type StandController struct {
-	repo *repositories.StandRepository
+	repo repositories.StandRepository
 }
 
-func NewStandController(repo *repositories.StandRepository) *StandController {
+func NewStandController(repo repositories.StandRepository) *StandController {
 	return &StandController{repo: repo}
 }
 
-// Créer un nouveau stand
+// CreateStand godoc
+// @Summary Créer un nouveau stand
+// @Description Crée un stand pour une kermesse
+// @Tags stands
+// @Accept json
+// @Produce json
+// @Param stand body models.Stand true "Stand à créer"
+// @Success 201 {object} models.Stand "Stand créé"
+// @Failure 400 {object} string "Invalid input"
+// @Failure 500 {object} string "Could not create stand"
+// @Router /stands [post]
 func (ctrl *StandController) CreateStand(c *gin.Context) {
 	var stand models.Stand
 
@@ -34,7 +44,16 @@ func (ctrl *StandController) CreateStand(c *gin.Context) {
 	c.JSON(http.StatusCreated, stand)
 }
 
-// Récupérer un stand par ID
+// GetStandByID godoc
+// @Summary Récupérer un stand par ID
+// @Description Récupère un stand spécifique par son ID
+// @Tags stands
+// @Produce json
+// @Param id path int true "Stand ID"
+// @Success 200 {object} models.Stand "Stand trouvé"
+// @Failure 400 {object} string "Invalid stand ID"
+// @Failure 404 {object} string "Stand not found"
+// @Router /stands/{id} [get]
 func (ctrl *StandController) GetStandByID(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -42,7 +61,7 @@ func (ctrl *StandController) GetStandByID(c *gin.Context) {
 		return
 	}
 
-	stand, err := ctrl.repo.FindByID(id)
+	stand, err := ctrl.repo.FindByID(uint(id))
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Stand not found"})
 		return
@@ -51,7 +70,16 @@ func (ctrl *StandController) GetStandByID(c *gin.Context) {
 	c.JSON(http.StatusOK, stand)
 }
 
-// Récupérer tous les stands pour une kermesse
+// GetStandsByKermesse godoc
+// @Summary Récupérer tous les stands pour une kermesse
+// @Description Récupère tous les stands associés à une kermesse spécifique
+// @Tags stands
+// @Produce json
+// @Param kermesse_id path int true "Kermesse ID"
+// @Success 200 {array} models.Stand "Liste des stands"
+// @Failure 400 {object} string "Invalid kermesse ID"
+// @Failure 500 {object} string "Could not retrieve stands"
+// @Router /kermesse/{kermesse_id}/stands [get]
 func (ctrl *StandController) GetStandsByKermesse(c *gin.Context) {
 	kermesseID, err := strconv.Atoi(c.Param("kermesse_id"))
 	if err != nil {
@@ -68,7 +96,17 @@ func (ctrl *StandController) GetStandsByKermesse(c *gin.Context) {
 	c.JSON(http.StatusOK, stands)
 }
 
-// Supprimer un stand
+// DeleteStand godoc
+// @Summary Supprimer un stand par ID
+// @Description Supprime un stand spécifique par son ID
+// @Tags stands
+// @Security ApiKeyAuth
+// @Param id path int true "Stand ID"
+// @Success 200 {object} string "Stand supprimé"
+// @Failure 400 {object} string "Invalid stand ID"
+// @Failure 404 {object} string "Stand not found"
+// @Failure 500 {object} string "Could not delete stand"
+// @Router /stands/{id} [delete]
 func (ctrl *StandController) DeleteStand(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -76,7 +114,7 @@ func (ctrl *StandController) DeleteStand(c *gin.Context) {
 		return
 	}
 
-	if err := ctrl.repo.Delete(id); err != nil {
+	if err := ctrl.repo.Delete(uint(id)); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not delete stand"})
 		return
 	}

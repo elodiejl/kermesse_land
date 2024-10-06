@@ -2,9 +2,18 @@ package services
 
 import (
 	"fmt"
+	"gorm.io/gorm"
 	"math/rand"
 	"time"
 )
+
+type TicketService struct {
+	DB *gorm.DB
+}
+
+func NewTicketService(db *gorm.DB) *TicketService {
+	return &TicketService{DB: db}
+}
 
 func GenerateTicketNumber() string {
 	rand.Seed(time.Now().UnixNano())
