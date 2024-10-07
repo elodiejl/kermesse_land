@@ -22,4 +22,4 @@ services:
       - database
     environment:
       GO_ENV: production  # Assurez-vous de le changer pour production lors du déploiement
-      DATABASE_URL: postgres://u2ndq60pdb2aak:pa5c3aba8791a8a19266e733d75f80dbad73ccfdac0fece43e0caa86e6d4511f6@c5hilnj7pn10vb.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/dcfh6snii4lu77
+      
