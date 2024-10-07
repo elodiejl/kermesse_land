@@ -7,12 +7,10 @@ import (
 	"back/repositories"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
-func RegisterTicketRoutes(r *gin.Engine, db *gorm.DB) {
+func RegisterTicketRoutes(r *gin.Engine, ticketRepo repositories.TicketRepository) {
 	// Initialiser les repositories et controllers
-	ticketRepo := repositories.NewTicketRepository(db)
 	ticketController := controllers.NewTicketController(ticketRepo)
 
 	// Routes pour les tickets
