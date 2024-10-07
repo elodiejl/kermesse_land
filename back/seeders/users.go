@@ -4,6 +4,7 @@ import (
 	"back/config"
 	"back/models"
 	"fmt"
+
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
@@ -99,8 +100,23 @@ func SeedUsers(db *gorm.DB) error {
 	}
 
 	for _, user := range users {
-		if err := db.Create(&user).Error; err != nil {
-			return err
+		var existingUser models.User
+		if err := db.Where("email = ?", user.Email).First(&existingUser).Error; err != nil {
+			if err == gorm.ErrRecordNotFound {
+				if err := db.Create(&user).Error; err != nil {
+					return err
+				}
+			} else {
+				return err
+			}
+		} else {
+			existingUser.FirstName = user.FirstName
+			existingUser.LastName = user.LastName
+			existingUser.Password = user.Password
+			existingUser.Roles = user.Roles
+			if err := db.Save(&existingUser).Error; err != nil {
+				return err
+			}
 		}
 	}
 	return nil
