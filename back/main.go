@@ -142,7 +142,7 @@ func main() {
 	docs.SwaggerInfo.Description = "API for the Kermesse Land project."
 	docs.SwaggerInfo.Version = "1.0"
 	docs.SwaggerInfo.BasePath = "/"
-	docs.SwaggerInfo.Host = "https://kermesse-land-5d1bb3e5d576.herokuapp.com"
+	docs.SwaggerInfo.Host = "kermesse-land-5d1bb3e5d576.herokuapp.com"
 	docs.SwaggerInfo.Schemes = []string{"http", "https"}
 
 	r.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
