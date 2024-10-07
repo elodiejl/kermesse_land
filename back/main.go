@@ -13,7 +13,6 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 	"github.com/madkins23/gin-utils/pkg/ginzero"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -36,10 +35,10 @@ import (
 // @externalDocs.url          https://swagger.io/resources/open-api/
 func main() {
 	//DB connection
-	err := godotenv.Load()
+	/*err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
-	}
+	}*/
 
 	db, err := database.ConnectDatabase()
 	if err != nil {
