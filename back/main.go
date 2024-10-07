@@ -7,15 +7,16 @@ import (
 	"back/repositories"
 	"back/routes"
 	"back/seeders"
+	"log"
+	"os"
+	"time"
+
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/madkins23/gin-utils/pkg/ginzero"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	"log"
-	"os"
-	"time"
 )
 
 // @termsOfService  http://swagger.io/terms/
@@ -219,7 +220,7 @@ func main() {
 	if port == "" {
 		port = "8080"
 	}
-	if err := r.Run(":8080"); err != nil {
+	if err := r.Run(":" + port); err != nil {
 		log.Fatal("Failed to start server: ", err)
 	}
 }
