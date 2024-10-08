@@ -18,8 +18,17 @@ func HasRole(user *models.User, role uint8) bool {
 func HasRequiredRole(userRoles, requiredRole uint8) bool {
 
 	if requiredRole == RoleOrganizer {
+
 		return userRoles&RoleOrganizer != 0 || userRoles&RoleAdmin != 0
 	}
-
+	if requiredRole == RoleParent {
+		return userRoles&RoleParent != 0 || userRoles&RoleAdmin != 0
+	}
+	if requiredRole == RoleStudent {
+		return userRoles&RoleStudent != 0 || userRoles&RoleAdmin != 0
+	}
+	if requiredRole == RoleStandLeader {
+		return userRoles&RoleStandLeader != 0 || userRoles&RoleAdmin != 0
+	}
 	return userRoles&requiredRole != 0
 }

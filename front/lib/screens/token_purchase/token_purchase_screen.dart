@@ -19,6 +19,22 @@ class TokenPurchasePage extends StatefulWidget {
 
 class TokenPurchasePageState extends State<TokenPurchasePage> {
   int _tokenAmount = 1;
+  late String parentId; // Changez-le en String si 'userId' est une chaîne
+  bool hasError = false;
+
+  @override
+  void initState() {
+    super.initState();
+    parentId = _getParentIdFromToken(widget.token);
+  }
+
+  String _getParentIdFromToken(String token) {
+    Map<String, dynamic> decodedToken = Jwt.parseJwt(token);
+    if (kDebugMode) {
+      print('Decoded Token: $decodedToken');
+    }
+    return decodedToken['userId'].toString();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,9 +78,11 @@ class TokenPurchasePageState extends State<TokenPurchasePage> {
                   },
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    //BlocProvider.of<TokenPurchaseBloc>(context).add(PurchaseTokens(widget.id, _tokenAmount));
-                  },
+                  onPressed: _tokenAmount > 0
+                      ? () {
+                    BlocProvider.of<TokenPurchaseBloc>(context).add(PurchaseTokens(parentId, _tokenAmount));
+                  }
+                      : null, // Désactive le bouton si le montant de jetons est 0
                   child: Text('Payer $_tokenAmount€'),
                 ),
               ],
@@ -74,5 +92,4 @@ class TokenPurchasePageState extends State<TokenPurchasePage> {
       ),
     );
   }
-
 }

@@ -38,9 +38,7 @@ class Config {
     BlocProvider<TransactionBloc>(
       create: (context) => TransactionBloc(),
     ),
-    /*BlocProvider<HackathonBloc>(
-      create: (context) => HackathonBloc(),
-    ),
+    /*
     BlocProvider<StepBloc>(
       create: (context) => StepBloc(StepRepository()),
     ),

@@ -6,13 +6,10 @@ import 'dart:convert';
 
 import '../../utils/config_io.dart';
 
-// Bloc
 class TokenPurchaseBloc extends Bloc<TokenPurchaseEvent, TokenPurchaseState> {
-  TokenPurchaseBloc() : super(TokenPurchaseInitial());
-
-  Stream<TokenPurchaseState> mapEventToState(TokenPurchaseEvent event) async* {
-    if (event is PurchaseTokens) {
-      yield TokenPurchaseLoading();
+  TokenPurchaseBloc() : super(TokenPurchaseInitial()) {
+    on<PurchaseTokens>((event, emit) async {
+      emit(TokenPurchaseLoading());
       try {
         final response = await http.post(
           Uri.parse('${Config.baseUrl}/api/create-payment-intent'),
@@ -24,12 +21,15 @@ class TokenPurchaseBloc extends Bloc<TokenPurchaseEvent, TokenPurchaseState> {
           }),
         );
 
-        final paymentIntentData = jsonDecode(response.body);
-
-        yield TokenPurchaseSuccess(paymentIntentData['id']);
+        if (response.statusCode == 200) {
+          final paymentIntentData = jsonDecode(response.body);
+          emit(TokenPurchaseSuccess(paymentIntentData['id']));
+        } else {
+          emit(TokenPurchaseError('Erreur lors de la création du paiement.'));
+        }
       } catch (e) {
-        yield TokenPurchaseError(e.toString());
+        emit(TokenPurchaseError(e.toString()));
       }
-    }
+    });
   }
 }
