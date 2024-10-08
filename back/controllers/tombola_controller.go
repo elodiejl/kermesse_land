@@ -80,7 +80,7 @@ func (ctrl *TombolaController) CreateTombola(c *gin.Context) {
 // @Failure 400 {object} string "Invalid tombola ID"
 // @Failure 401 {object} string "Unauthorized: No authorization token provided"
 // @Failure 404 {object} string "Tombola not found"
-// @Router /tombola/{id} [get]
+// @Router /tombola/detail/{id} [get]
 func (ctrl *TombolaController) GetTombolaByID(c *gin.Context) {
 	token := c.GetHeader("Authorization")
 	if token == "" {
@@ -180,7 +180,7 @@ func (ctrl *TombolaController) GetTombolasByKermesse(c *gin.Context) {
 // @Failure 401 {object} string "Unauthorized: No authorization token provided"
 // @Failure 404 {object} string "Tombola not found"
 // @Failure 500 {object} string "Could not delete tombola"
-// @Router /tombola/{id} [delete]
+// @Router /tombola/delete/{id} [delete]
 func (ctrl *TombolaController) DeleteTombola(c *gin.Context) {
 	token := c.GetHeader("Authorization")
 	if token == "" {

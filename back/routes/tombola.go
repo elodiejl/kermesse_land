@@ -17,8 +17,8 @@ func TombolaRoutes(router *gin.Engine, tombolaRepo repositories.TombolaRepositor
 	tombolaGroup := router.Group("/tombola")
 	{
 		tombolaGroup.POST("", tombolaController.CreateTombola)
-		tombolaGroup.GET("/:id", tombolaController.GetTombolaByID)
-		tombolaGroup.DELETE("/:id", tombolaController.DeleteTombola)
+		tombolaGroup.GET("/detail/:id", tombolaController.GetTombolaByID)
+		tombolaGroup.DELETE("/delete/:id", tombolaController.DeleteTombola)
 	}
 
 	router.GET("/kermesse/:kermesse_id/tombolas", tombolaController.GetTombolasByKermesse)

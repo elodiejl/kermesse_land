@@ -840,57 +840,7 @@
                 }
             }
         },
-        "/tombola/{id}": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Retrieve a tombola by its ID",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "tombola"
-                ],
-                "summary": "Get tombola by ID",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Tombola ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/models.Tombola"
-                        }
-                    },
-                    "400": {
-                        "description": "Invalid tombola ID",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized: No authorization token provided",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "404": {
-                        "description": "Tombola not found",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            },
+        "/tombola/delete/{id}": {
             "delete": {
                 "security": [
                     {
@@ -938,6 +888,58 @@
                     },
                     "500": {
                         "description": "Could not delete tombola",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/tombola/detail/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Retrieve a tombola by its ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "tombola"
+                ],
+                "summary": "Get tombola by ID",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Tombola ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Tombola"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid tombola ID",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized: No authorization token provided",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "404": {
+                        "description": "Tombola not found",
                         "schema": {
                             "type": "string"
                         }
