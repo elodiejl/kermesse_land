@@ -33,7 +33,7 @@ class RegisterScreenState extends State<RegisterPage> {
           firstName: _firstNameController.text,
           email: _emailController.text,
           password: _passwordController.text,
-          role: _selectedRole ?? '',
+          roles: _selectedRole ?? '',
         ),
       );
     }
@@ -153,9 +153,7 @@ class RegisterScreenState extends State<RegisterPage> {
                   ),
                   items: const <DropdownMenuItem<String>>[
                     DropdownMenuItem<String>(value: "4", child: Text('Élève')),
-                    DropdownMenuItem<String>(value: "8", child: Text('Parent')),
-                    DropdownMenuItem<String>(value: "1", child: Text('Organisateur')),
-                    DropdownMenuItem<String>(value: "16", child: Text('Gérant de stand')),
+                    DropdownMenuItem<String>(value: "8", child: Text('Parent'))
                   ],
                   onChanged: (String? newValue) {
                     setState(() {

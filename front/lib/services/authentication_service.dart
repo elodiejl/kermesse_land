@@ -49,7 +49,7 @@ class AuthenticationService {
     required String firstName,
     required String email,
     required String password,
-    required String role
+    required String roles
   }) async {
     var uri = Uri.parse('${Config.baseUrl}/user/register');
     var request = http.MultipartRequest('POST', uri)
@@ -58,7 +58,7 @@ class AuthenticationService {
       ..fields['first_name'] = firstName
       ..fields['email'] = email
       ..fields['password'] = password
-      ..fields['roles'] = role;
+      ..fields['roles'] = roles;
 
 
 

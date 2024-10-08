@@ -72,7 +72,7 @@ func (ctrl *UserController) Register(c *gin.Context) {
 	firstName := c.PostForm("first_name")
 	email := c.PostForm("email")
 	password := c.PostForm("password")
-	role := c.PostForm("role")
+	role := c.PostForm("roles")
 
 	roleInt, err := strconv.Atoi(role)
 	if err != nil {

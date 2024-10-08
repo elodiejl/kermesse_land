@@ -11,11 +11,11 @@ class SignUpButtonPressed extends RegistrationEvent {
   final String firstName;
   final String email;
   final String password;
-  final String role;
+  final String roles;
 
-  SignUpButtonPressed({required this.username, required this.lastName, required this.firstName, required this.email, required this.password, required this.role});
+  SignUpButtonPressed({required this.username, required this.lastName, required this.firstName, required this.email, required this.password, required this.roles});
 
   @override
-  List<Object?> get props => [username, lastName, firstName, email, password, role];
+  List<Object?> get props => [username, lastName, firstName, email, password, roles];
 
 }

@@ -20,7 +20,7 @@ class RegistrationBloc extends Bloc<RegistrationEvent, RegistrationState> {
           firstName: event.firstName,
           email: event.email,
           password: event.password,
-          role: event.role
+          roles: event.roles
       );
       emit(RegistrationSuccess());
     } catch (e) {
