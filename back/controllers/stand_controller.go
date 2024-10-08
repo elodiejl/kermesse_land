@@ -53,7 +53,7 @@ func (ctrl *StandController) CreateStand(c *gin.Context) {
 // @Success 200 {object} models.Stand "Stand trouvé"
 // @Failure 400 {object} string "Invalid stand ID"
 // @Failure 404 {object} string "Stand not found"
-// @Router /stands/{id} [get]
+// @Router /stands/detail/{id} [get]
 func (ctrl *StandController) GetStandByID(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -106,7 +106,7 @@ func (ctrl *StandController) GetStandsByKermesse(c *gin.Context) {
 // @Failure 400 {object} string "Invalid stand ID"
 // @Failure 404 {object} string "Stand not found"
 // @Failure 500 {object} string "Could not delete stand"
-// @Router /stands/{id} [delete]
+// @Router /stands/delete/{id} [delete]
 func (ctrl *StandController) DeleteStand(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {

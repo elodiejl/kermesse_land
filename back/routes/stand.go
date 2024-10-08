@@ -15,8 +15,8 @@ func StandRoutes(router *gin.Engine, standRepo repositories.StandRepository) {
 	standRoutes := router.Group("/stands")
 	{
 		standRoutes.POST("", middleware.AuthMiddleware(config.RoleAdmin, config.RoleStandLeader), standController.CreateStand)
-		standRoutes.GET("/:id", middleware.AuthMiddleware(config.RoleAdmin, config.RoleParent, config.RoleStudent, config.RoleOrganizer, config.RoleStandLeader), standController.GetStandByID)
+		standRoutes.GET("/detail/:id", middleware.AuthMiddleware(config.RoleAdmin, config.RoleParent, config.RoleStudent, config.RoleOrganizer, config.RoleStandLeader), standController.GetStandByID)
 		standRoutes.GET("/kermesse/:kermesse_id", middleware.AuthMiddleware(config.RoleAdmin, config.RoleParent, config.RoleStudent, config.RoleOrganizer, config.RoleStandLeader), standController.GetStandsByKermesse)
-		standRoutes.DELETE("/:id", middleware.AuthMiddleware(config.RoleAdmin, config.RoleStandLeader), standController.DeleteStand)
+		standRoutes.DELETE("/delete/:id", middleware.AuthMiddleware(config.RoleAdmin, config.RoleStandLeader), standController.DeleteStand)
 	}
 }

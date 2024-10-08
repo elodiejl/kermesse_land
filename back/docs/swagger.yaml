@@ -105,6 +105,27 @@ definitions:
     - stand_type
     - stock
     type: object
+  models.Student:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        type: string
+      id:
+        type: integer
+      parent_id:
+        description: Référence vers la table Parent (parent)
+        type: integer
+      token_amount:
+        type: integer
+      updatedAt:
+        type: string
+      user_id:
+        description: Référence vers la table User
+        type: integer
+    required:
+    - user_id
+    type: object
   models.Ticket:
     properties:
       createdAt:
@@ -658,7 +679,7 @@ paths:
       summary: Créer un nouveau stand
       tags:
       - stands
-  /stands/{id}:
+  /stands/delete/{id}:
     delete:
       description: Supprime un stand spécifique par son ID
       parameters:
@@ -689,6 +710,7 @@ paths:
       summary: Supprimer un stand par ID
       tags:
       - stands
+  /stands/detail/{id}:
     get:
       description: Récupère un stand spécifique par son ID
       parameters:
@@ -715,6 +737,164 @@ paths:
       summary: Récupérer un stand par ID
       tags:
       - stands
+  /students:
+    post:
+      consumes:
+      - application/json
+      description: Créer une nouvelle entrée étudiant
+      parameters:
+      - description: Student data
+        in: body
+        name: student
+        required: true
+        schema:
+          $ref: '#/definitions/models.Student'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Student created
+          schema:
+            $ref: '#/definitions/models.Student'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Créer un étudiant
+      tags:
+      - students
+  /students/{id}:
+    delete:
+      description: Supprimer un étudiant par son ID
+      parameters:
+      - description: Student ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Student deleted
+          schema:
+            type: string
+        "400":
+          description: Invalid ID format
+          schema:
+            type: string
+        "404":
+          description: Student not found
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Supprimer un étudiant
+      tags:
+      - students
+    get:
+      description: Récupérer un étudiant par son ID
+      parameters:
+      - description: Student ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Student found
+          schema:
+            $ref: '#/definitions/models.Student'
+        "400":
+          description: Invalid ID format
+          schema:
+            type: string
+        "404":
+          description: Student not found
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Trouver un étudiant par ID
+      tags:
+      - students
+    put:
+      consumes:
+      - application/json
+      description: Mettre à jour les informations d'un étudiant
+      parameters:
+      - description: Student ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Student data
+        in: body
+        name: student
+        required: true
+        schema:
+          $ref: '#/definitions/models.Student'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Student updated
+          schema:
+            $ref: '#/definitions/models.Student'
+        "400":
+          description: Invalid request
+          schema:
+            type: string
+        "404":
+          description: Student not found
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Mettre à jour un étudiant
+      tags:
+      - students
+  /students/parent/{parent_id}:
+    get:
+      description: Récupérer tous les étudiants d'un parent donné
+      parameters:
+      - description: Parent ID
+        in: path
+        name: parent_id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Students found
+          schema:
+            items:
+              $ref: '#/definitions/models.Student'
+            type: array
+        "400":
+          description: Invalid parent ID
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Trouver les étudiants d'un parent par ID
+      tags:
+      - students
   /tickets:
     post:
       consumes:
