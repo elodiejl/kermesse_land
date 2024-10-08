@@ -58,7 +58,7 @@ class AuthenticationService {
       ..fields['first_name'] = firstName
       ..fields['email'] = email
       ..fields['password'] = password
-      ..fields['role'] = role;
+      ..fields['roles'] = role;
 
 
 
