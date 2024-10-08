@@ -12,6 +12,15 @@ definitions:
     - currency
     - parent_id
     type: object
+  controllers.PaymentValidRequest:
+    properties:
+      parent_id:
+        type: integer
+      price:
+        type: integer
+      tokens_amount:
+        type: integer
+    type: object
   models.ErrorResponse:
     properties:
       error:
@@ -252,6 +261,43 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   termsOfService: http://swagger.io/terms/
 paths:
+  /api/complete-purchase:
+    post:
+      consumes:
+      - application/json
+      description: Enregistre la transaction et met à jour le nombre de jetons du
+        parent
+      parameters:
+      - description: Données de la requête
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.PaymentValidRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Transaction completed successfully
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Invalid request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Compléter l'achat de jetons
+      tags:
+      - payments
   /api/create-payment-intent:
     post:
       consumes:

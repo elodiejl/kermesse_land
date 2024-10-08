@@ -247,42 +247,37 @@ func CreatePaymentIntent(c *gin.Context) {
 	}(completePurchaseData))*/
 }
 
+// PaymentValidRequest représente la requête pour valider un paiement
+type PaymentValidRequest struct {
+	ParentID     int `json:"parent_id"`
+	TokensAmount int `json:"tokens_amount"`
+	Price        int `json:"price"`
+}
+
 // CompletePurchaseHandler gère la requête pour compléter un achat
+// @Summary      Compléter l'achat de jetons
+// @Description  Enregistre la transaction et met à jour le nombre de jetons du parent
+// @Tags         payments
+// @Accept       json
+// @Produce      json
+// @Param        request body PaymentValidRequest true "Données de la requête"
+// @Success      200 {object} map[string]string "Transaction completed successfully"
+// @Failure      400 {object} map[string]string "Invalid request"
+// @Failure      500 {object} map[string]string "Internal server error"
+// @Router       /api/complete-purchase [post]
 func (tc *TransactionController) CompletePurchaseHandler(c *gin.Context) {
-	var requestData struct {
-		ParentID     int `json:"parent_id"`
-		TokensAmount int `json:"tokens_amount"`
-		Price        int `json:"price"`
-	}
+	var requestData PaymentValidRequest
 
 	if err := c.ShouldBindJSON(&requestData); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
 		return
 	}
 
-	completePurchase(c, struct {
-		ParentID     int
-		TokensAmount int
-		Price        int
-	}(requestData))
+	completePurchase(c, requestData)
 }
 
 // completePurchase gère la validation de l'achat de jetons
-// @Summary      Compléter l'achat de jetons
-// @Description  Enregistre la transaction et met à jour le nombre de jetons du parent
-// @Tags         payments
-// @Accept       json
-// @Produce      json
-// @Param       request body struct { ParentID int `json:"parent_id"`; TokensAmount int `json:"tokens_amount"`; Price int `json:"price"` } true "Données de la requête"
-// @Success      200 {object} map[string]string "Transaction completed successfully"
-// @Failure      400 {object} map[string]string "Invalid request"
-// @Failure      500 {object} map[string]string "Internal server error"
-// @Router       /api/complete-purchase [post]
-func completePurchase(c *gin.Context, requestData struct {
-	ParentID     int
-	TokensAmount int
-	Price        int
-}) {
+func completePurchase(c *gin.Context, requestData PaymentValidRequest) {
 	db := c.MustGet("db").(*gorm.DB)
 
 	transaction := models.Transaction{

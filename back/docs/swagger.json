@@ -13,6 +13,61 @@
         }
     },
     "paths": {
+        "/api/complete-purchase": {
+            "post": {
+                "description": "Enregistre la transaction et met à jour le nombre de jetons du parent",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "payments"
+                ],
+                "summary": "Compléter l'achat de jetons",
+                "parameters": [
+                    {
+                        "description": "Données de la requête",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.PaymentValidRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Transaction completed successfully",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/create-payment-intent": {
             "post": {
                 "description": "Crée un PaymentIntent pour le paiement de jetons",
@@ -1572,6 +1627,20 @@
                 },
                 "parent_id": {
                     "type": "string"
+                }
+            }
+        },
+        "controllers.PaymentValidRequest": {
+            "type": "object",
+            "properties": {
+                "parent_id": {
+                    "type": "integer"
+                },
+                "price": {
+                    "type": "integer"
+                },
+                "tokens_amount": {
+                    "type": "integer"
                 }
             }
         },
