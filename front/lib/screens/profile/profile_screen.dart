@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kermesse_land/screens/profile/profile_param_screen.dart';
+import 'package:kermesse_land/screens/student/student_screen.dart';
 import '../../services/logout/logout_bloc.dart';
 import '../../services/logout/logout_event.dart';
 import '../../services/logout/logout_state.dart';
@@ -124,6 +125,20 @@ class ProfileScreen extends StatelessWidget {
                                     builder: (context) => TokenManagementPage(
                                         token: token
                                     ),
+                                  ),
+                                );
+                              },
+                            ),
+                            buildProfileItem(
+                              context,
+                              icon: Icons.child_care,
+                              title: 'Mes enfants',
+                              subtitle: 'Voir l\'activité de mes enfants',
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => StudentsScreen(parentId:state.user.id,token: token)
                                   ),
                                 );
                               },

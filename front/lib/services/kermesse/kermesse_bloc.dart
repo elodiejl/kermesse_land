@@ -38,7 +38,9 @@ class KermesseBloc extends Bloc<KermesseEvent, KermesseState> {
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);
 
-      print(data);
+      if (kDebugMode) {
+        print(data);
+      }
 
       return data.map((item) => Kermesse.fromJson(item)).toList();
     } else {
