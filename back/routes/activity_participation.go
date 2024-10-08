@@ -1,7 +1,9 @@
 package routes
 
 import (
+	"back/config"
 	"back/controllers"
+	middleware "back/middlewares"
 	"back/repositories"
 
 	"github.com/gin-gonic/gin"
@@ -14,7 +16,7 @@ func RegisterActivityParticipationRoutes(r *gin.Engine, db *gorm.DB) {
 	participationController := controllers.NewActivityParticipationController(participationRepo)
 
 	// Routes pour les participations aux activités
-	r.POST("/participations", participationController.CreateParticipation)
+	r.POST("/participations", middleware.AuthMiddleware(config.RoleAdmin, config.RoleParent, config.RoleStudent, config.RoleStandLeader), participationController.CreateParticipation)
 	r.GET("/participations/:id", participationController.GetParticipationByID)
 	r.GET("/users/:user_id/participations", participationController.GetParticipationsByUserID)
 	r.DELETE("/participations/:id", participationController.DeleteParticipation)

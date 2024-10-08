@@ -18,6 +18,6 @@ func RegisterActivityRoutes(r *gin.Engine, db *gorm.DB) {
 	// Routes pour les activités
 	r.POST("/activities", middleware.AuthMiddleware(config.RoleAdmin, config.RoleStandLeader), activityController.CreateActivity)
 	r.GET("/activities/:id", middleware.AuthMiddleware(config.RoleAdmin, config.RoleStudent, config.RoleStandLeader), activityController.GetActivityByID)
-	r.DELETE("/activities/:id", activityController.DeleteActivity)
-	r.GET("/stands/:stand_id/activities", activityController.GetActivitiesByStandID)
+	r.DELETE("/activities/:id", middleware.AuthMiddleware(config.RoleAdmin, config.RoleOrganizer, config.RoleStandLeader), activityController.DeleteActivity)
+	r.GET("/stands/:stand_id/activities", middleware.AuthMiddleware(config.RoleAdmin, config.RoleParent, config.RoleOrganizer, config.RoleStandLeader, config.RoleStudent), activityController.GetActivitiesByStandID)
 }
