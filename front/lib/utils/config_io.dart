@@ -14,11 +14,11 @@ import '../services/register/register_bloc.dart';
 import '../services/transaction/transaction_bloc.dart';
 
 class Config {
-  static String baseUrl =
-  Platform.isAndroid ? "http://10.0.2.2:8080" : "http://localhost:8080";
+  static String baseUrl = "https://kermesse-land-5d1bb3e5d576.herokuapp.com/";
+  //Platform.isAndroid ? "http://10.0.2.2:8080" : "http://localhost:8080";
 
   void configureFirebaseEmulators() {
-    final host = Platform.isAndroid ? "https://hackaton-419810.ew.r.appspot.com" : "localhost:8080";
+    final host = Platform.isAndroid ? "https://kermesse-land-5d1bb3e5d576.herokuapp.com/" : "localhost:8080";
     FirebaseAuth.instance.useAuthEmulator(host, 9099);
     FirebaseFirestore.instance.useFirestoreEmulator(host, 8082);
     FirebaseStorage.instance.useStorageEmulator(host, 9199);
