@@ -21,12 +21,13 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
       );
 
       if (response.statusCode == 200) {
+        if (kDebugMode) {
+          print(response.body);
+        }
         List<Student> students = (json.decode(response.body) as List)
             .map((data) => Student.fromJson(data))
             .toList();
-        if (kDebugMode) {
-          print(students);
-        }
+
         emit(StudentLoaded(students));
       } else {
         emit(StudentError('Failed to load students'));
