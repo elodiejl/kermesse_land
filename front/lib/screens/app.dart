@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:front/screens/profile/profile_screen.dart';
-import 'package:front/services/kermesse/kermesse_event.dart';
+import 'package:kermesse_land/screens/profile/profile_screen.dart';
+import 'package:kermesse_land/services/kermesse/kermesse_event.dart';
 import 'home_screen.dart';
-import 'package:front/services/kermesse/kermesse_bloc.dart';
+import 'package:kermesse_land/services/kermesse/kermesse_bloc.dart';
 import '../services/kermesse/kermesse_event.dart';
 import 'kermesse/kermesse_screen.dart';
 

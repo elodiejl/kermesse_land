@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:front/services/token_purchase/token_purchase_event.dart';
-import 'package:front/services/token_purchase/token_purchase_state.dart';
+import 'package:kermesse_land/services/token_purchase/token_purchase_event.dart';
+import 'package:kermesse_land/services/token_purchase/token_purchase_state.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 

@@ -80,7 +80,10 @@ func (ctrl *MessageController) HandleMessages(client *Client) {
 // Fonction pour gérer la réception des messages
 func (ctrl *MessageController) ReceiveMessages(client *Client) {
 	defer func() {
-		client.Socket.Close()
+		err := client.Socket.Close()
+		if err != nil {
+			return
+		}
 	}()
 
 	for {

@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:front/models/parent_model.dart';
+import 'package:kermesse_land/models/parent_model.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'parent_event.dart';

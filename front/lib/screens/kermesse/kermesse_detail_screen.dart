@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-//import 'package:front/repositories/team_repository.dart';
-import 'package:front/utils/config.dart';
+//import 'front/repositories/team_repository.dart';
+import 'package:kermesse_land/utils/config.dart';
 //import 'package:intl/intl.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 import 'package:http/http.dart' as http;

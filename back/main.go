@@ -143,7 +143,7 @@ func main() {
 	docs.SwaggerInfo.Version = "1.0"
 	docs.SwaggerInfo.BasePath = "/"
 	docs.SwaggerInfo.Host = "kermesse-land-5d1bb3e5d576.herokuapp.com"
-	docs.SwaggerInfo.Schemes = []string{"http", "https"}
+	docs.SwaggerInfo.Schemes = []string{"https"}
 
 	r.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
@@ -165,7 +165,7 @@ func main() {
 	//standRepo := repositories.NewStandRepository(db)
 	ticketRepo := repositories.NewTicketRepository(db)
 	//tokenRepo := repositories.NewTokenRepository(db)
-	//tombolaRepo := repositories.NewTombolaRepository(db)
+	tombolaRepo := repositories.NewTombolaRepository(db)
 	//notificationRepo := repositories.NewNotificationRepository(db)
 	//adminRepo := repositories.NewAdminRepository(db)
 
@@ -177,6 +177,7 @@ func main() {
 	routes.RegisterActivityParticipationRoutes(r, activityParticipationRepo.DB)
 	routes.RegisterActivityRoutes(r, activityRepo.DB)
 	routes.RegisterTicketRoutes(r, ticketRepo)
+	routes.TombolaRoutes(r, tombolaRepo, db)
 	/*routes.SetupStepRouter(r, db, stepRepo, userRepo)
 	routes.HackathonRoutes(r, db, submissionRepo, userRepo, stepRepo, teamRepo, hackathonRepo, participationRepo, messagingService)
 	routes.SetupEvaluationRouter(r, db, evaluationRepo, userRepo, teamRepo, hackathonRepo, submissionRepo)

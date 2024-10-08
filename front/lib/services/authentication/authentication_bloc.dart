@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import '../authentication_service.dart';
-import 'package:front/services/authentication/authentication_state.dart';
+import 'package:kermesse_land/services/authentication/authentication_state.dart';
 
-import 'package:front/services/authentication/authentication_event.dart';
+import 'package:kermesse_land/services/authentication/authentication_event.dart';
 
 
 class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {

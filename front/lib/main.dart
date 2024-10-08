@@ -6,22 +6,22 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:front/screens/profile/profile_screen.dart';
-import 'package:front/screens/login/login_screen.dart';
-import 'package:front/screens/app.dart';
+import 'package:kermesse_land/screens/profile/profile_screen.dart';
+import 'package:kermesse_land/screens/login/login_screen.dart';
+import 'package:kermesse_land/screens/app.dart';
 
-import 'package:front/services/authentication/authentication_bloc.dart';
-import 'package:front/services/authentication/authentication_state.dart';
+import 'package:kermesse_land/services/authentication/authentication_bloc.dart';
+import 'package:kermesse_land/services/authentication/authentication_state.dart';
 
 
-import 'package:front/utils/config_io.dart';
+import 'package:kermesse_land/utils/config_io.dart';
 import 'firebase_options.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:json_theme/json_theme.dart';
-import 'package:front/utils/routes.dart';
+import 'package:kermesse_land/utils/routes.dart';
 import 'package:provider/provider.dart';
 import 'services/authentication_service.dart';
 import 'package:rxdart/rxdart.dart';

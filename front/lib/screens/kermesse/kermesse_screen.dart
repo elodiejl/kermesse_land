@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-//import 'package:front/screens/kermesse/kermesse_teams_screen.dart';
+//import 'package:kermesse_land/screens/kermesse/kermesse_teams_screen.dart';
 //import 'package:intl/intl.dart';
 //import '../../components/forms/add_hackathon_form.dart';
 import '../../services/kermesse/kermesse_bloc.dart';

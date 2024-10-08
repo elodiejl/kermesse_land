@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
-import 'package:front/services/register/register_event.dart';
-import 'package:front/services/register/register_state.dart';
+import 'package:kermesse_land/services/register/register_event.dart';
+import 'package:kermesse_land/services/register/register_state.dart';
 
 import '../authentication_service.dart';
 

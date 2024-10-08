@@ -1,11 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:front/screens/token_purchase/token_purchase_screen.dart';
-import 'package:front/services/parent/parent_bloc.dart'; // Importer ton bloc Parent
-import 'package:front/services/parent/parent_event.dart';
-import 'package:front/services/transaction/transaction_bloc.dart'; // Importer ton bloc Transaction
-import 'package:front/services/transaction/transaction_event.dart';
+import 'package:kermesse_land/screens/token_purchase/token_purchase_screen.dart';
+import 'package:kermesse_land/services/parent/parent_bloc.dart'; // Importer ton bloc Parent
+import 'package:kermesse_land/services/parent/parent_event.dart';
+import 'package:kermesse_land/services/transaction/transaction_bloc.dart'; // Importer ton bloc Transaction
+import 'package:kermesse_land/services/transaction/transaction_event.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 
 import '../../services/parent/parent_state.dart';

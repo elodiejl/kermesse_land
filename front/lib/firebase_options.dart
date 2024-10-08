@@ -64,7 +64,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '377950971319',
     projectId: 'kermesse-land',
     storageBucket: 'kermesse-land.appspot.com',
-    iosBundleId: 'com.example.front',
+    iosBundleId: 'com.example.kermesse_land',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
@@ -73,7 +73,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '377950971319',
     projectId: 'kermesse-land',
     storageBucket: 'kermesse-land.appspot.com',
-    iosBundleId: 'com.example.front',
+    iosBundleId: 'com.example.kermesse_land',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(

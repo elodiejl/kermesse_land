@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:bloc/bloc.dart';
-import 'package:front/services/user/user_event.dart';
-import 'package:front/services/user/user_state.dart';
+import 'package:kermesse_land/services/user/user_event.dart';
+import 'package:kermesse_land/services/user/user_state.dart';
 import 'package:http/http.dart' as http;
 
 import '../../models/user_model.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:front/widgets/buttons/button_base.dart';
+import 'package:kermesse_land/widgets/buttons/button_base.dart';
 
 import '../../services/login/login_bloc.dart';
 import '../../services/login/login_event.dart';

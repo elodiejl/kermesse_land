@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:front/services/token_purchase/token_purchase_bloc.dart';
+import 'package:kermesse_land/services/token_purchase/token_purchase_bloc.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:jwt_decode/jwt_decode.dart';
 

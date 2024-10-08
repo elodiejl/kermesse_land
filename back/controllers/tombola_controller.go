@@ -12,7 +12,7 @@ import (
 
 type TombolaController struct {
 	repo     repositories.TombolaRepository
-	userRepo repositories.UserRepository
+	UserRepo repositories.UserRepository
 }
 
 func NewTombolaController(repo repositories.TombolaRepository) *TombolaController {
@@ -50,7 +50,7 @@ func (ctrl *TombolaController) CreateTombola(c *gin.Context) {
 	}
 
 	var user models.User
-	if err := ctrl.userRepo.GetUserByID(userID, &user); err != nil {
+	if err := ctrl.UserRepo.GetUserByID(userID, &user); err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
 		return
 	}
@@ -99,7 +99,7 @@ func (ctrl *TombolaController) GetTombolaByID(c *gin.Context) {
 	}
 
 	var user models.User
-	if err := ctrl.userRepo.GetUserByID(userID, &user); err != nil {
+	if err := ctrl.UserRepo.GetUserByID(userID, &user); err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
 		return
 	}
@@ -149,7 +149,7 @@ func (ctrl *TombolaController) GetTombolasByKermesse(c *gin.Context) {
 	}
 
 	var user models.User
-	if err := ctrl.userRepo.GetUserByID(userID, &user); err != nil {
+	if err := ctrl.UserRepo.GetUserByID(userID, &user); err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
 		return
 	}
@@ -199,7 +199,7 @@ func (ctrl *TombolaController) DeleteTombola(c *gin.Context) {
 	}
 
 	var user models.User
-	if err := ctrl.userRepo.GetUserByID(userID, &user); err != nil {
+	if err := ctrl.UserRepo.GetUserByID(userID, &user); err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
 		return
 	}

@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:front/screens/profile/profile_param_screen.dart';
+import 'package:kermesse_land/screens/profile/profile_param_screen.dart';
 import '../../services/logout/logout_bloc.dart';
 import '../../services/logout/logout_event.dart';
 import '../../services/logout/logout_state.dart';
