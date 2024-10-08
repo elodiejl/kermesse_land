@@ -18,5 +18,5 @@ func TransactionRoutes(r *gin.Engine, transactionRepo repositories.TransactionRe
 	r.DELETE("/transactions/:id", middleware.AuthMiddleware(config.RoleAdmin), transactionController.DeleteTransaction)
 	r.GET("/transactions", middleware.AuthMiddleware(config.RoleAdmin, config.RoleParent), transactionController.GetTransactionsByParentID)
 	r.POST("/api/create-payment-intent", middleware.AuthMiddleware(config.RoleAdmin, config.RoleParent), controllers.CreatePaymentIntent)
-	//r.POST("/api/complete-purchase", middleware.AuthMiddleware(config.RoleAdmin, config.RoleParent), controllers.CompletePurchase)
+	r.POST("/api/complete-purchase", middleware.AuthMiddleware(config.RoleAdmin, config.RoleParent), transactionController.CompletePurchaseHandler)
 }

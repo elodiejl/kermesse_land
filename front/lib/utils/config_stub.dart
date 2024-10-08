@@ -9,7 +9,7 @@ import '../services/login/login_bloc.dart';
 import '../services/register/register_bloc.dart';
 
 class Config {
-  static String baseUrl = "http://localhost:8080";
+  static String baseUrl = "https://kermesse-land-5d1bb3e5d576.herokuapp.com";
 
   /*static List<LocalizationsDelegate> get localizationsDelegates => [
     AppLocalizations.delegate,

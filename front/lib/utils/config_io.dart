@@ -14,7 +14,7 @@ import '../services/register/register_bloc.dart';
 import '../services/transaction/transaction_bloc.dart';
 
 class Config {
-  static String baseUrl = "https://kermesse-land-5d1bb3e5d576.herokuapp.com/";
+  static String baseUrl = "https://kermesse-land-5d1bb3e5d576.herokuapp.com";
   //Platform.isAndroid ? "http://10.0.2.2:8080" : "http://localhost:8080";
 
   void configureFirebaseEmulators() {

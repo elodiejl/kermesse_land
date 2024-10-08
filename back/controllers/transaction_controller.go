@@ -3,14 +3,16 @@ package controllers
 import (
 	"back/models"
 	"back/repositories"
-	"github.com/gin-gonic/gin"
-	"github.com/stripe/stripe-go/v72"
-	"gorm.io/gorm"
+	"back/services"
 	"net/http"
 	"os"
 	"strconv"
 	_ "strconv"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/stripe/stripe-go/v72"
+	"gorm.io/gorm"
 
 	"github.com/stripe/stripe-go/v72/paymentintent"
 )
@@ -121,6 +123,22 @@ func (tc *TransactionController) UpdateTransaction(c *gin.Context) {
 // @Router       /transactions/{id} [delete]
 func (tc *TransactionController) DeleteTransaction(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
+	token := c.GetHeader("Authorization")
+	if token == "" {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized: No authorization token provided"})
+		return
+	}
+
+	if len(token) > 7 && token[:7] == "Bearer " {
+		token = token[7:]
+	}
+
+	_, err = services.GetUserIDFromToken(token)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized: Invalid token"})
+		return
+	}
+
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid transaction ID"})
 		return
@@ -186,6 +204,10 @@ func CreatePaymentIntent(c *gin.Context) {
 	}
 
 	stripe.Key = os.Getenv("STRIPE_PRIVATE_KEY")
+	if stripe.Key == "" {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Stripe API key is not set"})
+		return
+	}
 
 	// Créer le PaymentIntent
 	params := &stripe.PaymentIntentParams{
@@ -202,7 +224,7 @@ func CreatePaymentIntent(c *gin.Context) {
 	response := map[string]string{"clientSecret": pi.ClientSecret}
 	c.JSON(http.StatusOK, response)
 
-	parentID, err := strconv.Atoi(requestData.ParentID)
+	/*parentID, err := strconv.Atoi(requestData.ParentID)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid parent ID"})
 		return
@@ -222,10 +244,40 @@ func CreatePaymentIntent(c *gin.Context) {
 		ParentID     int
 		TokensAmount int
 		Price        int
-	}(completePurchaseData))
+	}(completePurchaseData))*/
 }
 
-// Logique pour compléter l'achat
+// CompletePurchaseHandler gère la requête pour compléter un achat
+func (tc *TransactionController) CompletePurchaseHandler(c *gin.Context) {
+	var requestData struct {
+		ParentID     int `json:"parent_id"`
+		TokensAmount int `json:"tokens_amount"`
+		Price        int `json:"price"`
+	}
+
+	if err := c.ShouldBindJSON(&requestData); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
+		return
+	}
+
+	completePurchase(c, struct {
+		ParentID     int
+		TokensAmount int
+		Price        int
+	}(requestData))
+}
+
+// completePurchase gère la validation de l'achat de jetons
+// @Summary      Compléter l'achat de jetons
+// @Description  Enregistre la transaction et met à jour le nombre de jetons du parent
+// @Tags         payments
+// @Accept       json
+// @Produce      json
+// @Param       request body struct { ParentID int `json:"parent_id"`; TokensAmount int `json:"tokens_amount"`; Price int `json:"price"` } true "Données de la requête"
+// @Success      200 {object} map[string]string "Transaction completed successfully"
+// @Failure      400 {object} map[string]string "Invalid request"
+// @Failure      500 {object} map[string]string "Internal server error"
+// @Router       /api/complete-purchase [post]
 func completePurchase(c *gin.Context, requestData struct {
 	ParentID     int
 	TokensAmount int
