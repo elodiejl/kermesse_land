@@ -1239,6 +1239,11 @@ paths:
         name: password
         required: true
         type: string
+      - description: Role
+        in: formData
+        name: roles
+        required: true
+        type: string
       produces:
       - application/json
       responses:

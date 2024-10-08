@@ -1534,6 +1534,13 @@ const docTemplate = `{
                         "name": "password",
                         "in": "formData",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Role",
+                        "name": "roles",
+                        "in": "formData",
+                        "required": true
                     }
                 ],
                 "responses": {

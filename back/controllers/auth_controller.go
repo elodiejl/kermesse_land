@@ -60,6 +60,7 @@ func (ctrl *UserController) Login(c *gin.Context) {
 // @Param first_name formData string true "First Name"
 // @Param email formData string true "Email"
 // @Param password formData string true "Password"
+// @Param roles formData string true "Role"
 // @Success 201 {object} models.UserRegisterResponse "User registered"
 // @Failure 400 {object} string "Invalid request"
 // @Failure 500 {object} string "Internal server error"
