@@ -80,7 +80,7 @@ class TokenPurchasePageState extends State<TokenPurchasePage> {
                 ElevatedButton(
                   onPressed: _tokenAmount > 0
                       ? () {
-                    BlocProvider.of<TokenPurchaseBloc>(context).add(PurchaseTokens(parentId, _tokenAmount));
+                    BlocProvider.of<TokenPurchaseBloc>(context).add(PurchaseTokens(widget.token,parentId, _tokenAmount));
                   }
                       : null, // Désactive le bouton si le montant de jetons est 0
                   child: Text('Payer $_tokenAmount€'),

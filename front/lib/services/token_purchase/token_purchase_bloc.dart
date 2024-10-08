@@ -13,7 +13,7 @@ class TokenPurchaseBloc extends Bloc<TokenPurchaseEvent, TokenPurchaseState> {
       try {
         final response = await http.post(
           Uri.parse('${Config.baseUrl}/api/create-payment-intent'),
-          headers: {'Content-Type': 'application/json'},
+          headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ${event.token}',},
           body: jsonEncode({
             'amount': event.tokenAmount * 100, // Convertir en centimes
             'currency': 'eur',

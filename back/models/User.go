@@ -20,6 +20,7 @@ type UserRegister struct {
 	FirstName string `json:"first_name" binding:"required" example:"John"`
 	Email     string `json:"email" binding:"required" example:"john.doe@exmple.com"`
 	Password  string `json:"password" binding:"required" example:"password"`
+	Roles     string `json:"roles" binding:"required"`
 }
 
 type UserRegisterResponse struct {
