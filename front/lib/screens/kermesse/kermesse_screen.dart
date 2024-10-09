@@ -4,10 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 //import 'package:kermesse_land/screens/kermesse/kermesse_teams_screen.dart';
 //import 'package:intl/intl.dart';
-//import '../../components/forms/add_hackathon_form.dart';
 import '../../services/kermesse/kermesse_bloc.dart';
 import '../../services/kermesse/kermesse_event.dart';
 import '../../services/kermesse/kermesse_state.dart';
+import '../stand/stands_by_kermesse_screen.dart';
 
 class KermesseScreen extends StatefulWidget {
   final String token;
@@ -46,7 +46,7 @@ class KermesseScreenState extends State<KermesseScreen> {
         );
       },
     ).then((_) {
-      _kermesseBloc.add(FetchKermesseForUser(token)); // Refresh kermesses after the dialog is closed
+      _kermesseBloc.add(FetchKermesseForUser(token));
     });
   }
 
@@ -116,6 +116,15 @@ class KermesseScreenState extends State<KermesseScreen> {
                         child: InkWell(
                           onTap: () {
                             // Action quand on clique sur une kermesse
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => StandsByKermesseScreen(
+                                  token: widget.token,
+                                  kermesseId: kermesse.id,
+                                ),
+                              ),
+                            );
                           },
                           child: Padding(
                             padding: const EdgeInsets.all(10.0),

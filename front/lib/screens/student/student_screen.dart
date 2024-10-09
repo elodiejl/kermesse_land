@@ -38,7 +38,7 @@ class StudentList extends StatelessWidget {
               final student = state.students[index];
               return ListTile(
                 title: Text(student.name),
-                subtitle: Text('ID: ${student.id}'),
+                subtitle: Text('Prénom: ${student.id}, nombre de jeton: ${student.tokenAmount}'),
               );
             },
           );

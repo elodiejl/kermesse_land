@@ -1,12 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kermesse_land/screens/stand/stands_by_kermesse_screen.dart';
 //import 'package:intl/intl.dart';
 
 import '../../services/kermesse/kermesse_bloc.dart';
 import '../../services/kermesse/kermesse_event.dart';
 import '../../services/kermesse/kermesse_state.dart';
 import '../models/kermesse_model.dart';
+import '../services/stand/stand_bloc.dart';
 //import '../widgets/geolocation_button.dart';
 //import 'hackathon/kermesse_detail_screen.dart';
 
@@ -110,15 +112,6 @@ class HomeScreenState extends State<HomeScreen> {
                 child: ListView.builder(
                   itemCount: kermesses.length,
                   itemBuilder: (context, index) {
-                    if (kDebugMode) {
-                      print(index);
-                      print('kermesse: ');
-                      print(kermesses);
-                      /* final distance = kermesse.distance != null
-                        ? '(${kermesse.distance!.toStringAsFixed(1)} km)'
-                        : '(Aucune distance)';*/
-
-                    }
                     final kermesse = kermesses[index];
                     final id = kermesse.id;
                     final date = kermesse.date;
@@ -140,15 +133,16 @@ class HomeScreenState extends State<HomeScreen> {
                         color: Colors.white,
                         child: InkWell(
                           onTap: () {
-                            /*Navigator.push(
-                              context,
+                            // Action quand on clique sur une kermesse
+                            Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) => KermesseDetailPage(
-                                  id: id.toString(),
-                                  token: widget.token,
+                                builder: (context) => BlocProvider(
+                                  create: (context) => StandBloc(),
+                                  child: StandsByKermesseScreen(token: widget.token,
+                                    kermesseId: kermesse.id,),
                                 ),
                               ),
-                            );*/
+                            );
                           },
                           child: Padding(
                             padding: const EdgeInsets.all(10.0),

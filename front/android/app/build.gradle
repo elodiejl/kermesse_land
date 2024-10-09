@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.5.20'
+    ext.kotlin_version = '1.8.22'
     repositories {
         google()
         jcenter()
@@ -38,10 +38,23 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = new File('../key.properties')
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
     namespace "com.example.kermesse_land"
     compileSdk flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
+
+    signingConfigs {
+        release {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyPassword']
+            storeFile file(keystoreProperties['storeFile'])
+            storePassword keystoreProperties['storePassword']
+        }
+    }
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -70,9 +83,10 @@ android {
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 }

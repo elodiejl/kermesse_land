@@ -11,6 +11,7 @@ import '../services/authentication_service.dart';
 import '../services/login/login_bloc.dart';
 import '../services/parent/parent_bloc.dart';
 import '../services/register/register_bloc.dart';
+import '../services/stand/stand_bloc.dart';
 import '../services/transaction/transaction_bloc.dart';
 
 class Config {
@@ -38,12 +39,8 @@ class Config {
     BlocProvider<TransactionBloc>(
       create: (context) => TransactionBloc(),
     ),
-    /*
-    BlocProvider<StepBloc>(
-      create: (context) => StepBloc(StepRepository()),
+    BlocProvider(
+      create: (context) => StandBloc(),
     ),
-    BlocProvider<TeamBloc>(
-      create: (context) => TeamBloc(TeamRepository()),
-    ),*/
   ];
 }
